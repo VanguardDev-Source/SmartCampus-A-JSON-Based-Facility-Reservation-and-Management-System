@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Campus Facility Reservation (Beginner)</title>
+  <style>
+    /* Simple styles using float for layout */
+    body {
+      font-family: Arial;
+      background: #f0f0f0; /* simpler gray */
+      margin: 0;
+      color: #333333;
+    }
+    
+    .wrap {
+      width: 1100px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 18px;
+    }
+    
+    .card {
+      background: white;
+      padding: 16px;
+      border-radius: 10px;
+      border: 1px solid #cccccc; /* Replaced shadow with border */
+      margin-bottom: 18px;
+    }
+    
+    h1 {
+      margin: 0 0 6px;
+      font-size: 20px;
+    }
+    
+    .muted {
+      color: #777777;
+    }
+
+    /* --- This is the "clearfix" trick needed for floats --- */
+    .grid::after,
+    .facility::after,
+    .topbar::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    /* --- This is the "float" version of the 2-column grid --- */
+    .grid > div:first-child {
+      float: left;
+      width: 320px;
+    }
+    .grid > div:last-child {
+      float: left;
+      width: 730px; /* Had to calculate width (1100 - padding - card padding - 320 - gap...) */
+      margin-left: 15px; /* This creates the "gap" */
+    }
+
+    /* --- This is the "float" version of the facility item --- */
+    .facility {
+      padding: 8px;
+      border-radius: 10px;
+      border: 1px solid #eeeeee;
+    }
+    .facility img {
+      float: left; /* Image on the left */
+      width: 76px;
+      height: 56px;
+      border-radius: 8px;
+      margin-right: 12px; /* This creates the "gap" */
+    }
+    /* The text will just flow to the right of the floated image */
+
+    
+    label {
+      display: block;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+    
+    /* Added box-sizing, a common "fix" beginners learn */
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid #cccccc;
+      box-sizing: border-box; /* Makes 'width: 100%' behave better with padding */
+    }
+    
+    button {
+      background: blue; /* simpler color */
+      color: white; /* simpler color */
+      border: 0;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    
+    .btn-ghost {
+      background: white;
+      color: blue;
+      border: 1px solid #cccccc;
+    }
+    
+    /* --- Beginner table style --- */
+    table {
+      width: 100%;
+      border: 1px solid black; /* Instead of border-collapse */
+      margin-top: 8px;
+    }
+    th,
+    td {
+      padding: 8px;
+      border: 1px solid black; /* Creates a grid */
+      font-size: 14px;
+      text-align: left;
+    }
+    
+    .status {
+      padding: 6px 8px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: inline-block;
+    }
+    
+    /* Simpler status colors */
+    .pending {
+      background: #ffffcc; /* light yellow */
+      color: #666600;
+    }
+    .approved {
+      background: #ccffcc; /* light green */
+      color: #006600;
+    }
+    .rejected {
+      background: #ffcccc; /* light red */
+      color: #990000;
+    }
+
+    /* --- This is the "float" version of the top bar --- */
+    .topbar {
+      margin-bottom: 10px;
+    }
+    .topbar > div:first-child {
+      float: left; /* Title on the left */
+    }
+    .topbar > div:last-child {
+      float: right; /* User info on the right */
+    }
+
+    
+    .small {
+      font-size: 13px;
+      color: #777777;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .actions button {
+      margin-right: 6px;
+    }
+    
+    /* This class wasn't used in the HTML, but if it were, a beginner might do this: */
+    .center {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="topbar">
+        <div>
+          <h1>Campus Facility Reservation</h1>
+        </div>
+        <div id="userInfo" class="small"></div>
+      </div>
+
+      <div id="authBox" class="card">
+        <h3>Login or Sign Up</h3>
+        <div id="loginForm">
+          <label>Username</label>
+          <input id="loginUser" type="text" placeholder="username" />
+          <label>Password</label>
+          <input id="loginPass" type="password" placeholder="password" />
+          <div style="margin-top:10px;display:flex;gap:8px">
+            <button id="btnLogin">Login</button>
+            <button id="showSignup" class="btn-ghost">Sign up</button>
+          </div>
+        </div>
+
+        <div id="signupForm" class="hidden">
+          <label>Choose a username</label>
+          <input id="signupUser" type="text" placeholder="e.g. jdelaCruz" />
+          <label>Create a password</label>
+          <input id="signupPass" type="password" placeholder="password" />
+          <label>Display name (Full name)</label>
+          <input id="signupName" type="text" placeholder="Juan Dela Cruz" />
+          <div style="margin-top:10px;display:flex;gap:8px">
+            <button id="btnSignup">Create account</button>
+            <button id="showLogin" class="btn-ghost">Back to login</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="app" class="hidden">
+        <div class="grid">
+          <div>
+            <div class="card">
+              <h3>Facilities</h3>
+              <div id="facilityList"></div>
+            </div>
+
+            <div class="card">
+              <h3>Make a Booking</h3>
+              <div class="small muted">Selected facility: <span id="selectedFacilityName">(none)</span></div>
+
+              <label>Date</label>
+              <input id="date" type="date" />
+
+              <label>From</label>
+              <input id="from" type="time" />
+
+              <label>To</label>
+              <input id="to" type="time" />
+
+              <label>Purpose / Notes</label>
+              <textarea id="purpose" rows="3" placeholder="e.g. Group presentation"></textarea>
+
+              <div style="margin-top:10px;display:flex;gap:8px">
+                <button id="btnBook">Submit Booking</button>
+                <button id="btnClear" class="btn-ghost">Clear</button>
+              </div>
+
+              <div style="margin-top:10px" class="small muted" id="availabilityInfo">Choose a facility and date to see availability.</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <h3>Reservations</h3>
+                <div class="small">Showing: <select id="filterUser"><option value="all">All</option><option value="mine">My bookings</option></select></div>
+              </div>
+
+              <table>
+                <thead><tr><th>Facility</th><th>Date</th><th>Time</th><th>By</th><th>Status</th><th></th></tr></thead>
+                <tbody id="reservationsTbody"></tbody>
+              </table>
+            </div>
+
+            <div id="adminPanel" class="card hidden">
+              <h3>Admin Panel</h3>
+              <div class="small muted">Approve or reject pending bookings</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    /* ======================================================
+      Beginner-friendly Campus Reservation System (single file)
+      =======================================================*/
+
+    // ----------------- Simple Data Setup ------------------
+    const STORAGE = {
+      USERS: 'cfr_users_v1',
+      FACILITIES: 'cfr_facilities_v1',
+      BOOKINGS: 'cfr_bookings_v1'
+    };
+
+    // Predefined facilities (with placeholder images)
+    const DEFAULT_FACILITIES = [
+      { id: 'R101', name: 'Room 101', img: 'https://www.pasigcatholic.edu.ph/assets/logo/00.png', desc: 'Lecture room, 30 seats' },
+      { id: 'LAB-A', name: 'Computer Lab A', img: 'https://www.pasigcatholic.edu.ph/assets/logo/00.png', desc: 'PC lab with 20 computers' },
+      { id: 'HALL-1', name: 'Main Hall', img: 'https://www.pasigcatholic.edu.ph/assets/logo/00.png', desc: 'Large hall for events' },
+      { id: 'AV-R', name: 'Audio Visual Room', img: 'https://www.pasigcatholic.edu.ph/assets/logo/00.png', desc: 'Projector and sound system' }
+    ];
+
+ // ----------------- Helper functions ------------------
+    function timeToMinutes(timeString) {
+      if (!timeString) {
+        return null;
+      }
+      const parts = timeString.split(':'); 
+      const hours = parseInt(parts[0]); 
+      const minutes = parseInt(parts[1]); 
+      return (hours * 60) + minutes;
+    }
+    
+    // Check if a proposed booking conflicts with existing approved or pending bookings
+    function hasConflict(facilityId, date, from, to, ignoreId) {
+      
+      // Get all bookings from storage
+      const bookingsJSON = localStorage.getItem(STORAGE.BOOKINGS);
+      
+      let bookings = [];
+      if (bookingsJSON) {
+        // If we have saved bookings, parse them into an array
+        bookings = JSON.parse(bookingsJSON);
+      } 
+      // If bookingsJSON is null (no bookings yet), our 'bookings' array is just empty.
+
+      // Convert our new booking's times to minutes
+      const newStartTime = timeToMinutes(from);
+      const newEndTime = timeToMinutes(to);
+
+      // Check for bad times
+      if (newStartTime === null || newEndTime === null || newStartTime >= newEndTime) {
+        return true; // Invalid time, so it's a "conflict"
+      }
+
+      // Loop through all existing bookings using a standard 'for' loop
+      for (let i = 0; i < bookings.length; i++) {
+        const b = bookings[i]; // Get the booking at position 'i'
+
+        // Check if we should skip this booking (if it's the one we are editing)
+        let skipThisBooking = false;
+        if (ignoreId && b.id === ignoreId) {
+          skipThisBooking = true;
+        }
+
+        // Only check for conflicts if we are NOT skipping this booking
+        if (skipThisBooking === false) {
+        
+          // Check only for the same room and day
+          if (b.facilityId === facilityId && b.date === date) {
+            
+            // Only 'Pending' or 'Approved' bookings block a slot
+            if (b.status === 'Pending' || b.status === 'Approved') {
+              
+              // Get the existing booking's times in minutes
+              const existingStartTime = timeToMinutes(b.from);
+              const existingEndTime = timeToMinutes(b.to);
+              
+              // This is the main check for any overlap
+              // (New booking starts before old one ends) AND (Old booking starts before new one ends)
+              const isOverlapping = (newStartTime < existingEndTime && existingStartTime < newEndTime);
+
+              if (isOverlapping) {
+                return true; // Found a conflict! Stop checking and report true.
+              }
+            }
+          }
+        }
+      }
+      
+      return false; // Loop finished and no conflicts were found
+    }
+
+    // ----------------- DOM references ------------------
+    const authBox = document.getElementById('authBox');
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const btnLogin = document.getElementById('btnLogin');
+    const btnSignup = document.getElementById('btnSignup');
+    const showSignup = document.getElementById('showSignup');
+    const showLogin = document.getElementById('showLogin');
+    const app = document.getElementById('app');
+    const userInfo = document.getElementById('userInfo');
+    const facilityList = document.getElementById('facilityList');
+    const selectedFacilityName = document.getElementById('selectedFacilityName');
+    const dateInput = document.getElementById('date');
+    const fromInput = document.getElementById('from');
+    const toInput = document.getElementById('to');
+    const purposeInput = document.getElementById('purpose');
+    const btnBook = document.getElementById('btnBook');
+    const btnClear = document.getElementById('btnClear');
+    const availabilityInfo = document.getElementById('availabilityInfo');
+    const reservationsTbody = document.getElementById('reservationsTbody');
+    const filterUser = document.getElementById('filterUser');
+    const adminPanel = document.getElementById('adminPanel');
+    const loginUser = document.getElementById('loginUser');
+    const loginPass = document.getElementById('loginPass');
+    const signupUser = document.getElementById('signupUser');
+    const signupPass = document.getElementById('signupPass');
+    const signupName = document.getElementById('signupName');
+
+    // ----------------- App State ------------------
+    let currentUser = null; // { username, name, role }
+    let facilities = [];
+    let selectedFacilityId = null;
+
+    // ----------------- Date function ------------------
+    function setTodayDate() {
+      const today = new Date();
+      const year = today.getFullYear();
+      // +1 because months are 0-11. padStart adds a '0' if it's a single digit.
+      const month = (today.getMonth() + 1).toString().padStart(2, '0'); 
+      const day = today.getDate().toString().padStart(2, '0');
+      // Format: YYYY-MM-DD
+      dateInput.value = `${year}-${month}-${day}`; 
+    }
+
+    // ----------------- Render functions ------------------
+    function renderFacilities() {
+      facilityList.innerHTML = '';
+      facilities.forEach(f => {
+        const el = document.createElement('div');
+        el.className = 'facility';
+        el.innerHTML = `<img src="${f.img}" alt="${f.name}" onerror="this.src='https://www.pasigcatholic.edu.ph/assets/logo/00.png'" />
+                          <div>
+                            <strong>${f.name}</strong>
+                            <div class="small muted">${f.desc}</div>
+                          </div>`;
+        el.onclick = () => {
+          selectedFacilityId = f.id;
+          selectedFacilityName.textContent = f.name;
+          updateAvailability();
+          highlightSelected();
+        };
+        facilityList.appendChild(el);
+      });
+      highlightSelected();
+    }
+
+    function highlightSelected() {
+      Array.from(facilityList.children).forEach((ch, idx) => {
+        const f = facilities[idx];
+        if (f.id === selectedFacilityId) {
+          ch.style.borderColor = '#dbeafe'; // highlight color
+        } else {
+          ch.style.borderColor = 'transparent'; // default
+        }
+      });
+    }
+
+    function renderReservations() {
+      const bookings = JSON.parse(localStorage.getItem(STORAGE.BOOKINGS)) || [];
+      const filter = filterUser.value; // all or mine
+      reservationsTbody.innerHTML = ''; // Clear the table
+
+      // sort by date then time
+      bookings.sort((a, b) => a.date === b.date ? (a.from < b.from ? -1 : 1) : (a.date < b.date ? -1 : 1));
+
+      // Loop and build HTML string for each row
+      bookings.forEach(b => {
+        if (filter === 'mine' && (!currentUser || b.username !== currentUser.username)) {
+          return; // Skip this one if filter is "mine" and it's not ours
+        }
+        
+        const fac = facilities.find(x => x.id === b.facilityId) || { name: b.facilityId };
+        
+        let actionsHtml = ''; // We will build the action buttons as a string
+
+        // If current user is the one who booked, allow cancel
+        if (currentUser && b.username === currentUser.username) {
+          // Add a cancel button
+          // IMPORTANT: We must use single quotes inside the onclick attribute
+          actionsHtml += `<button class="btn-ghost" onclick="cancelBooking('${b.id}')">Cancel</button> `;
+        }
+
+        // If admin and booking pending -> show approve/reject
+        if (currentUser && currentUser.role === 'admin' && b.status === 'Pending') {
+          actionsHtml += `<button onclick="changeStatus('${b.id}', 'Approved')">Approve</button> `;
+          actionsHtml += `<button class="btn-ghost" onclick="changeStatus('${b.id}', 'Rejected')">Reject</button>`;
+        }
+
+        // Add the new row to the table body's HTML
+        reservationsTbody.innerHTML += `
+          <tr>
+            <td>${fac.name}</td>
+            <td>${b.date}</td>
+            <td>${b.from} - ${b.to}</td>
+            <td>${b.displayName || b.username}</td>
+            <td><span class="status ${b.status.toLowerCase()}">${b.status}</span></td>
+            <td class="actions">${actionsHtml}</td>
+          </tr>
+        `;
+      });
+    }
+
+
+    // ----------------- Booking actions ------------------
+    function updateAvailability() {
+      const d = dateInput.value;
+      if (!selectedFacilityId || !d) {
+        availabilityInfo.textContent = 'Choose a facility and date to see availability.';
+        return;
+      }
+      
+      const allBookings = JSON.parse(localStorage.getItem(STORAGE.BOOKINGS)) || [];
+      const bookings = allBookings.filter(b => b.facilityId === selectedFacilityId && b.date === d);
+      
+      if (bookings.length === 0) {
+        availabilityInfo.textContent = 'No bookings for selected date — facility looks available.';
+        return;
+      }
+      // show list of booked slots
+      const lines = bookings.map(b => `${b.from} - ${b.to} • ${b.status} (${b.displayName || b.username})`);
+      availabilityInfo.innerHTML = '<strong>Booked slots:</strong><br>' + lines.join('<br>');
+    }
+
+    btnBook.onclick = () => {
+      if (!currentUser) { alert('Please login first'); return; }
+      if (!selectedFacilityId) { alert('Select a facility'); return; }
+      
+      const date = dateInput.value,
+        from = fromInput.value,
+        to = toInput.value,
+        purpose = purposeInput.value.trim();
+        
+      if (!date || !from || !to) { alert('Choose date and time'); return; }
+      
+      // We have to check time validity inside hasConflict, but also here
+      const fromMins = (from.split(':').map(Number)[0] * 60) + from.split(':').map(Number)[1];
+      const toMins = (to.split(':').map(Number)[0] * 60) + to.split(':').map(Number)[1];
+      if (fromMins >= toMins) { 
+        alert('Start time must be before end time'); 
+        return; 
+      }
+
+      if (hasConflict(selectedFacilityId, date, from, to, null)) {
+        alert('Time conflict — this slot overlaps an existing booking. Try another time.');
+        return;
+      }
+
+      // Save booking as Pending
+      const bookings = JSON.parse(localStorage.getItem(STORAGE.BOOKINGS)) || [];
+      const id = 'bk_' + Date.now(); // Simplified ID
+      
+      const newBooking = {
+        id,
+        facilityId: selectedFacilityId,
+        date,
+        from,
+        to,
+        username: currentUser.username,
+        displayName: currentUser.name,
+        purpose,
+        status: 'Pending',
+        createdAt: new Date().toISOString()
+      };
+      
+      bookings.push(newBooking);
+      localStorage.setItem(STORAGE.BOOKINGS, JSON.stringify(bookings));
+      
+      alert('Booking submitted — status: Pending. Admin will review.');
+      renderReservations();
+      updateAvailability();
+      
+      // Clear the form (was in clearBookingForm())
+      fromInput.value = '';
+      toInput.value = '';
+      purposeInput.value = '';
+    };
+
+    function cancelBooking(id) {
+      // Confirm added here, since it's not on the button anymore
+      if (confirm('Cancel booking?')) { 
+        let bookings = JSON.parse(localStorage.getItem(STORAGE.BOOKINGS)) || [];
+        bookings = bookings.filter(b => b.id !== id);
+        localStorage.setItem(STORAGE.BOOKINGS, JSON.stringify(bookings));
+        renderReservations();
+        updateAvailability();
+      }
+    }
+
+    function changeStatus(id, status) {
+      const bookings = JSON.parse(localStorage.getItem(STORAGE.BOOKINGS)) || [];
+      const idx = bookings.findIndex(b => b.id === id);
+      if (idx === -1) return; // Not found
+      
+      bookings[idx].status = status;
+      localStorage.setItem(STORAGE.BOOKINGS, JSON.stringify(bookings));
+      renderReservations();
+      updateAvailability();
+    }
+
+
+// ----------------- Authentication ------------------
+  
+  // When user clicks "Sign up" button, show signup form
+  showSignup.onclick = function() {
+    loginForm.style.display = 'none'; // Hide login form
+    signupForm.style.display = 'block'; // Show signup form
+  };
+  
+  // When user clicks "Back to login" button, show login form
+  showLogin.onclick = function() {
+    signupForm.style.display = 'none'; // Hide signup form
+    loginForm.style.display = 'block'; // Show login form
+  };
+
+  // When user clicks the "Create account" button
+  btnSignup.onclick = function() {
+    // Get the values from the input boxes
+    const u = signupUser.value.trim();
+    const p = signupPass.value;
+    const name = signupName.value.trim();
+
+    // Check if any fields are empty
+    if (u === "" || p === "" || name === "") {
+      alert('Fill all signup fields');
+      return; // Stop the function
+    }
+    
+    // Get all users from storage
+    let users = JSON.parse(localStorage.getItem(STORAGE.USERS));
+    if (users === null) {
+      users = []; // If no users, start with an empty array
+    }
+
+    // Check if username is already taken
+    let usernameTaken = false;
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].username === u) {
+        usernameTaken = true;
+        break; // Found a match, stop looping
+      }
+    }
+
+    if (usernameTaken === true) {
+      alert('Username already taken');
+      return; // Stop the function
+    }
+    
+    // If username is not taken, add the new user
+    const newUser = { 
+      username: u, 
+      password: p, 
+      name: name, 
+      role: 'user' 
+    };
+    users.push(newUser);
+    
+    // Save the updated users array back to storage
+    localStorage.setItem(STORAGE.USERS, JSON.stringify(users));
+    
+    alert('Account created. You can now login.');
+    
+    // Clear the signup form
+    signupUser.value = '';
+    signupPass.value = '';
+    signupName.value = '';
+    
+    // Go back to the login form
+    showLogin.click();
+  };
+
+  // When user clicks the "Login" button
+  btnLogin.onclick = function() {
+    // Get login values
+    const u = loginUser.value.trim();
+    const p = loginPass.value;
+
+    if (u === "" || p === "") {
+      alert('Enter username and password');
+      return; // Stop
+    }
+    
+    // Get all users
+    let users = JSON.parse(localStorage.getItem(STORAGE.USERS));
+    if (users === null) {
+      users = []; // No users exist
+    }
+
+    // Find the matching user
+    let foundUser = null; // A variable to hold the user if we find them
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].username === u && users[i].password === p) {
+        foundUser = users[i]; // We found the user!
+        break; // Stop looping
+      }
+    }
+    
+    if (foundUser === null) {
+      // We looped through everyone and found no match
+      alert('Invalid credentials');
+    } else {
+      // success
+      currentUser = { 
+        username: foundUser.username, 
+        name: foundUser.name, 
+        role: foundUser.role 
+      };
+      
+      // Hide the login box
+      authBox.style.display = 'none';
+      // Show the main app
+      app.style.display = 'block';
+      
+      // Show user's name at the top
+      userInfo.textContent = currentUser.name + ' (' + currentUser.role + ')';
+      
+      // show admin panel if user is an admin
+      if (currentUser.role === 'admin') {
+        adminPanel.style.display = 'block';
+      } else {
+        adminPanel.style.display = 'none';
+      }
+      
+      // Redraw the tables
+      renderReservations();
+      updateAvailability();
+    }
+  };
+
+  // ----------------- Other events ------------------
+  
+  // When user clicks the "Clear" button on the booking form
+  btnClear.onclick = function() {
+    fromInput.value = '';
+    toInput.value = '';
+    purposeInput.value = '';
+  };
+  
+  // When user changes the dropdown filter
+  filterUser.onchange = function() {
+    renderReservations(); // Redraw the reservations list
+  };
+
+  // ----------------- Start ------------------
+  // This code runs when the page loads
+  
+  // Check for users
+  let users_check = JSON.parse(localStorage.getItem(STORAGE.USERS));
+  if (users_check === null) {
+    // If no users, create the admin user
+    users_check = [{ username: 'admin', password: 'admin123', name: 'Administrator', role: 'admin' }];
+    localStorage.setItem(STORAGE.USERS, JSON.stringify(users_check));
+  }
+  
+  // Check for facilities
+  let fac_check = JSON.parse(localStorage.getItem(STORAGE.FACILITIES));
+  if (fac_check === null) {
+    // If no facilities, save the default ones
+    localStorage.setItem(STORAGE.FACILITIES, JSON.stringify(DEFAULT_FACILITIES));
+    facilities = DEFAULT_FACILITIES; 
+  } else {
+    // If we have facilities, load them
+    facilities = fac_check; 
+  }
+  
+  // Check for bookings
+  let bookings_check = JSON.parse(localStorage.getItem(STORAGE.BOOKINGS));
+  if (bookings_check === null) {
+    // If no bookings, create an empty list
+    localStorage.setItem(STORAGE.BOOKINGS, JSON.stringify([]));
+  }
+
+  // Now, run the functions to draw the page
+  renderFacilities();
+  setTodayDate();
+  renderReservations();
+  
+</script>
+</body>
+</html>
