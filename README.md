@@ -1,67 +1,66 @@
-# Campus Facility Reservation System
+# SmartCampus — Facility Reservation & Management System
 
-**A beautiful, modern, and fully functional facility booking app for schools and universities**
+**A modern, elegant, and fully client-side facility booking platform built for educational institutions**
 
-![Preview](https://r2.fivemanage.com/MWLudJ5Y6PkaRWGKQjIKo/Screenshot2025-11-18112043.png)
+![SmartCampus Preview](https://r2.fivemanage.com/MWLudJ5Y6/Preview.png)
+> Clean • Responsive • No Backend Required • Built with Pure HTML, CSS & JavaScript
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-6366f1?style=for-the-badge&logo=vercel&logoColor=white)](https://your-username.github.io/campus-facility-reservation)
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
-![No Backend](https://img.shields.io/badge/Backend-None-4ade80?style=flat)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-6366f1?style=for-the-badge&logo=vercel&logoColor=white)](https://vanguarddev-source.github.io/SmartCampus-A-JSON-Based-Facility-Reservation-and-Management-System)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
+[![Made with Love](https://img.shields.io/badge/Made_with-Love-ff6b6b?style=for-the-badge&logo=heart&logoColor=white)](#)
 
 ---
 
 ### Live Demo
-https://your-username.github.io/campus-facility-reservation  
-*(After deploying on GitHub Pages)*
+[https://vanguarddev-source.github.io/SmartCampus-A-JSON-Based-Facility-Reservation-and-Management-System](https://vanguarddev-source.github.io/SmartCampus-A-JSON-Based-Facility-Reservation-and-Management-System)
 
 ---
 
-## Features
+## Key Features
 
-- User Registration & Secure Login
-- Beautiful facility cards with images
-- Real-time availability checker
-- Prevents double-booking automatically
-- Admin approval system (Pending → Approved/Rejected)
-- Responsive & premium 2025 design (glassmorphism, gradients, animations)
-- Fully offline — works without internet after first load
-- Admin panel to add/edit/delete facilities
-- Mobile-friendly
+| Feature                        | Description |
+|-------------------------------|-----------|
+| **User Authentication**       | Secure login & registration with localStorage persistence |
+| **Role-Based Access Control**  | Distinct User and Admin experiences |
+| **Real-Time Availability**     | Instant conflict detection during booking |
+| **Admin Approval Workflow**    | All bookings start as *Pending* → Admin approves/rejects |
+| **Facility Management**       | Admins can add, edit, or remove facilities via modal dashboard |
+| **Responsive Design**          | Flawless on desktop, tablet, and mobile |
+| **Premium 2025 UI/UX**         | Glassmorphism, smooth animations, Inter typography |
+| **Zero Backend**               | 100% client-side — perfect for static hosting |
 
 ---
 
-## Default Login
+## Default Credentials
 
-| Role  | Username | Password   |
-|-------|----------|------------|
-| Admin | `admin`  | `admin123` |
+| Role       | Username | Password    |
+|------------|----------|-------------|
+| Administrator | `admin`  | `admin123`  |
 
-> Users can create their own accounts!
+> Regular users can register their own accounts.
 
 ---
 
 ## Screenshots
 
-<img src="screenshots/login.jpg" width="32%" /> <img src="screenshots/dashboard.jpg" width="32%" /> <img src="screenshots/admin.jpg" width="32%" />
-
-*(Create a `screenshots/` folder and add real images later)*
+| Login & Dashboard                  | Booking Interface                   | Admin Facility Management          |
+|------------------------------------|-------------------------------------|------------------------------------|
+| ![Login](https://r2.fivemanage.com/MWLudJ5Y6PkaRWGKQjIKo/login.png) | ![Booking](https://r2.fivemanage.com/MWLudJ5Y6PkaRWGKQjIKo/booking.png) | ![Admin](https://r2.fivemanage.com/MWLudJ5Y6PkaRWGKQjIKo/admin.png) |
 
 ---
 
-## How to Use
+## Quick Start
 
-### Option 1: Deploy Instantly (GitHub Pages)
+### Option 1 — Deploy with GitHub Pages (Recommended)
 
-1. Click **"Use this template"** → Create new repository
-2. Go to **Settings → Pages**
-3. Set source to `main` branch → `/ (root)`
-4. Your site is live in 1 minute!
+1. Click **"Use this template"** → Create a new repository  
+2. Go to **Settings → Pages**  
+3. Select branch: `main` → folder: `/ (root)`  
+4. Your site is live instantly!
 
-### Option 2: Run Locally
+### Option 2 — Run Locally
 
 ```bash
-git clone https://github.com/your-username/campus-facility-reservation.git
-cd campus-facility-reservation
-# Just open index.html in your browser!
+git clone https://github.com/VanguardDev-Source/SmartCampus-A-JSON-Based-Facility-Reservation-and-Management-System.git
+cd SmartCampus-A-JSON-Based-Facility-Reservation-and-Management-System
+# Open index.html in your browser
