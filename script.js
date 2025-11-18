@@ -214,7 +214,6 @@ function login() {
   const password = el.loginPass.value;
   const users = getUsers();
   const user = users.find(u => u.username === username && u.password === password);
-
   if (!user) {
     alert('Wrong username or password!');
     return;
@@ -225,9 +224,17 @@ function login() {
   el.app.classList.remove('hidden');
   el.userInfo.textContent = `${currentUser.name} (${currentUser.role})`;
 
+  // Show/Hide Admin Dashboard button based on role
+  const adminBtn = document.getElementById('openAdminModal');
+  if (currentUser.role === 'admin') {
+    adminBtn.classList.remove('hidden');
+  } else {
+    adminBtn.classList.add('hidden');
+  }
+
   showBookings();
   showFacilities();
-  showAdminFacilities();
+  showAdminFacilities(); // This already checks for admin inside
 }
 
 function signup() {
@@ -434,3 +441,4 @@ document.addEventListener('keydown', e => {
   showBookings();
 
 })();
+
