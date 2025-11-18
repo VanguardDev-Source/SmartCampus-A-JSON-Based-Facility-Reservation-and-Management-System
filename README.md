@@ -12,7 +12,7 @@
 ---
 
 ### Live Demo
-[https://vanguarddev-source.github.io/SmartCampus-A-JSON-Based-Facility-Reservation-and-Management-System](https://vanguarddev-source.github.io/SmartCampus-A-JSON-Based-Facility-Reservation-and-Management-System)
+[Click Here!](https://vanguarddev-source.github.io/SmartCampus-A-JSON-Based-Facility-Reservation-and-Management-System/)
 
 ---
 
