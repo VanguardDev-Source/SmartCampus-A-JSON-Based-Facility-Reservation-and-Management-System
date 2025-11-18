@@ -2,8 +2,7 @@
 
 **A beautiful, modern, and fully functional facility booking app for schools and universities**
 
-![Preview](https://r2.fivemanage.com/MWLudJ5Y6PkaRWGKQjIKo/Screenshot2025-11-18112043.png)  
-*(Replace with real screenshot after upload)*
+![Preview](https://r2.fivemanage.com/MWLudJ5Y6PkaRWGKQjIKo/Screenshot2025-11-18112043.png)
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-6366f1?style=for-the-badge&logo=vercel&logoColor=white)](https://your-username.github.io/campus-facility-reservation)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
