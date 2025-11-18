@@ -2,7 +2,7 @@
 
 **A modern, elegant, and fully client-side facility booking platform built for educational institutions**
 
-![SmartCampus Preview](https://r2.fivemanage.com/MWLudJ5Y6/Preview.png)
+![SmartCampus Preview](https://r2.fivemanage.com/MWLudJ5Y6PkaRWGKQjIKo/Screenshot2025-11-18112043.png)
 > Clean • Responsive • No Backend Required • Built with Pure HTML, CSS & JavaScript
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-6366f1?style=for-the-badge&logo=vercel&logoColor=white)](https://vanguarddev-source.github.io/SmartCampus-A-JSON-Based-Facility-Reservation-and-Management-System)
