@@ -356,7 +356,10 @@ function saveFacility() {
 // =============================================
 
 function openAdminModal() {
-  if (currentUser.role !== 'admin') return alert('Only admins can access this');
+  if (currentUser.role !== 'admin') {
+    alert('Only administrators can access the dashboard.');
+    return;
+  }
   el.adminModal.classList.add('active');
   showAdminFacilities();
 }
@@ -429,4 +432,5 @@ document.addEventListener('keydown', e => {
   // Show facilities
   showFacilities();
   showBookings();
+
 })();
